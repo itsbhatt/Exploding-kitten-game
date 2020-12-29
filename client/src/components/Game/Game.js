@@ -62,18 +62,19 @@ const useStyles = makeStyles({
   },
 });
 
-const Game = () => {
+const Game = ({ userName }) => {
   const classes = useStyles();
 
   const [cards, setCards] = useState([]);
   const [defusingCard, setDefusingCard] = useState(0);
-  const [gameStatus, setGameStatus] = useState(null);
+  const [gameStatus, setGameStatus] = useState({
+    played: 0,
+    win: 0,
+    loose: 0,
+    status: '',
+  });
 
-  useEffect(() => {
-    startGame();
-  }, []);
-
-  const startGame = () => {
+  const startGame = (e, type = 'new') => {
     const gameCards = ['cat', 'bomb', 'defusing', 'shuffle'];
     const GetCards = [];
 
@@ -84,8 +85,26 @@ const Game = () => {
     }
 
     setCards([...GetCards]);
-    setGameStatus('running');
+    setDefusingCard(0);
+
+    setGameStatus((oldGameStatus) => ({
+      ...oldGameStatus,
+      status: 'running',
+    }));
+
+    console.log(type);
+
+    if (type === 'new') {
+      setGameStatus((oldGameStatus) => ({
+        ...oldGameStatus,
+        played: oldGameStatus.played + 1,
+      }));
+    }
   };
+
+  useEffect(() => {
+    startGame();
+  }, []);
 
   const drawCardHandler = (e) => {
     e.target.style.transform = 'rotateY(180deg)';
@@ -100,11 +119,14 @@ const Game = () => {
     const lastCard = leftCards.pop();
 
     if (lastCard === 'shuffle') {
-      setGameStatus('restarting');
+      setGameStatus((oldGameStatus) => ({
+        ...oldGameStatus,
+        status: 'restarting',
+      }));
 
       setTimeout(() => {
-        startGame();
-      }, 2000);
+        startGame(null, 'restart');
+      }, 1000);
 
       return true;
     } else if (lastCard === 'defusing') {
@@ -113,21 +135,29 @@ const Game = () => {
       if (defusingCard > 0) {
         setDefusingCard((deCard) => deCard - 1);
       } else {
-        return setGameStatus('loose');
+        return setGameStatus((oldGameStatus) => ({
+          ...oldGameStatus,
+          loose: oldGameStatus.loose + 1,
+          status: 'loose',
+        }));
       }
     }
     setCards([...leftCards]);
 
     if (leftCards.length === 0) {
-      setGameStatus('win');
+      return setGameStatus((oldGameStatus) => ({
+        ...oldGameStatus,
+        win: oldGameStatus.win + 1,
+        status: 'win',
+      }));
     }
   };
 
   return (
     <Box position="relative">
-      <Typography paragraph>{gameStatus}</Typography>
+      <Typography paragraph>{gameStatus.status}</Typography>
       <Box position="relative">
-        {gameStatus === 'running' &&
+        {gameStatus.status === 'running' &&
           cards.map((card, key) => (
             <Box className={classes.root} zIndex={key} key={key + card}>
               <Box className={classes.flipCardInner} onClick={drawCardHandler}>
@@ -146,12 +176,18 @@ const Game = () => {
           ))}
       </Box>
       <Typography paragraph>{cards.length} cards left</Typography>
-      {gameStatus !== 'loose' ||
-        (gameStatus !== 'win' && (
-          <Button onClick={startGame} variant="contained">
-            Click Here to play Again
-          </Button>
-        ))}
+
+      <Box mt={10}>
+        <Typography>user : {userName}</Typography>
+        <Typography>played : {gameStatus.played}</Typography>
+        <Typography>win: {gameStatus.win}</Typography>
+        <Typography>loose: {gameStatus.loose}</Typography>
+      </Box>
+      {(gameStatus.status === 'loose' || gameStatus.status === 'win') && (
+        <Button onClick={startGame} variant="contained">
+          Click Here to play Again
+        </Button>
+      )}
     </Box>
   );
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   makeStyles,
   TextField,
@@ -24,8 +24,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TransitionsModal({ open, handleClose }) {
+export default function TransitionsModal({ open, handleClose, setUser }) {
   const classes = useStyles();
+
+  const [username, setUsername] = useState('');
+
+  const submitHandler = (e) => {
+    e.preventDefault();
+    setUser(username);
+  };
 
   return (
     <Modal
@@ -42,21 +49,26 @@ export default function TransitionsModal({ open, handleClose }) {
     >
       <Fade in={open}>
         <div className={classes.paper}>
-          <Typography align="center">Enter A Username</Typography>
-          <Box my={5} minWidth="280px">
-            <TextField
-              label="Username"
-              id="standard-size-small"
-              defaultValue=""
-              size="small"
-              fullWidth
-            />
-          </Box>
-          <Box display="flex" justifyContent="center">
-            <Button al variant="outlined">
-              Play
-            </Button>
-          </Box>
+          <form onSubmit={submitHandler}>
+            <Typography align="center">Enter A Username</Typography>
+            <Box my={5} minWidth="280px">
+              <TextField
+                label="Username"
+                id="standard-size-small"
+                defaultValue=""
+                size="small"
+                value={username}
+                fullWidth
+                onChange={(e) => setUsername(e.target.value)}
+                required
+              />
+            </Box>
+            <Box display="flex" justifyContent="center">
+              <Button type="submit" variant="outlined">
+                Play
+              </Button>
+            </Box>
+          </form>
         </div>
       </Fade>
     </Modal>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, Typography } from '@material-ui/core';
 import Modal from '../Modal';
 
-const Home = () => {
+const Home = ({ setUser }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -32,7 +32,7 @@ const Home = () => {
         </Button>{' '}
       </Box>
 
-      <Modal open={open} handleClose={() => setOpen(false)} />
+      <Modal open={open} handleClose={() => setOpen(false)} setUser={setUser} />
     </Box>
   );
 };
