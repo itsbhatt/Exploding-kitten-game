@@ -1,18 +1,19 @@
 import { SET_USER } from '../actions/types';
 
 const initialState = {
-  score: 0,
-  cardsLeft: [],
-  defuse: 0,
-  suffle: 0,
+  username: '',
+  savedGame: { cards: [], defusingCard: 0 },
+  played: 0,
+  win: 0,
+  loose: 0,
 };
 
-export default function alert(state = initialState, action) {
+export default function game(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
     case SET_USER:
-      return [...state, payload];
+      return { ...state, ...payload };
 
     default:
       return state;

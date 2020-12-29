@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import './App.css';
+import { connect } from 'react-redux';
 
 import Home from './components/Home';
 import Game from './components/Game';
 
-function App() {
+import './App.css';
+
+const App = ({ game }) => {
   const [userName, setUserName] = useState('');
 
-  useEffect(() => {}, [userName]);
+  useEffect(() => {
+    setUserName(game?.username);
+  }, [game]);
 
-  if (userName) return <Game userName={userName} />;
+  if (userName) return <Game />;
 
-  return <Home setUser={(val) => setUserName(val)} />;
-}
+  return <Home />;
+};
 
-export default App;
+const mapStateToProps = (state) => ({
+  game: state.game,
+});
+
+export default connect(mapStateToProps)(App);

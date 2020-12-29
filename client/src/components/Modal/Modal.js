@@ -9,6 +9,9 @@ import {
   Box,
   Typography,
 } from '@material-ui/core';
+import { connect } from 'react-redux';
+
+import { getSetUser } from '../../redux/actions/user';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -24,14 +27,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function TransitionsModal({ open, handleClose, setUser }) {
+const TransitionsModal = ({ open, handleClose, getSetUser }) => {
   const classes = useStyles();
 
   const [username, setUsername] = useState('');
 
   const submitHandler = (e) => {
     e.preventDefault();
-    setUser(username);
+    getSetUser(username);
   };
 
   return (
@@ -55,7 +58,6 @@ export default function TransitionsModal({ open, handleClose, setUser }) {
               <TextField
                 label="Username"
                 id="standard-size-small"
-                defaultValue=""
                 size="small"
                 value={username}
                 fullWidth
@@ -73,4 +75,6 @@ export default function TransitionsModal({ open, handleClose, setUser }) {
       </Fade>
     </Modal>
   );
-}
+};
+
+export default connect(null, { getSetUser })(TransitionsModal);

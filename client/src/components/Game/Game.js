@@ -1,110 +1,60 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  makeStyles,
-  Typography,
-} from '@material-ui/core';
+import { Box, Button, Card, CardContent, Typography } from '@material-ui/core';
+import { connect } from 'react-redux';
 
-const useStyles = makeStyles({
-  root: {
-    minWidth: 275,
-    maxWidth: 280,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    background: 'white',
-    backgroundColor: 'transparent',
-    perspective: '1000px',
-  },
-  flipCardInner: {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-    textAlign: 'center',
-    transition: 'transform 0.4s',
-    transformStyle: 'preserve-3d',
-    boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-  },
+import useStyles from './useStyles';
 
-  flipCardFront: {
-    backgroundColor: '#bbb',
-    color: 'black',
-    position: '<i class="fas fa-value-absolute"></i>',
-    width: '100%',
-    height: '100%',
-    '-webkit-backface-visibility': 'hidden',
-    backfaceVisibility: 'hidden',
-  },
-
-  flipCardBack: {
-    backgroundColor: '#2980b9',
-    color: 'white',
-    transform: 'rotateY(180deg)',
-    position: '<i class="fas fa-value-absolute"></i>',
-    width: '100%',
-    height: '100%',
-    '-webkit-backface-visibility': 'hidden',
-    backfaceVisibility: 'hidden',
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-});
-
-const Game = ({ userName }) => {
+const Game = ({ game }) => {
   const classes = useStyles();
 
   const [cards, setCards] = useState([]);
   const [defusingCard, setDefusingCard] = useState(0);
+
   const [gameStatus, setGameStatus] = useState({
     played: 0,
     win: 0,
     loose: 0,
-    status: '',
+    status: 'loading',
   });
 
-  const startGame = (e, type = 'new') => {
-    const gameCards = ['cat', 'bomb', 'defusing', 'shuffle'];
-    const GetCards = [];
+  const startGame = (game) => {
+    let GetCards = [];
+    let defusing = 0;
 
-    for (let i = 0; i < 5; i++) {
-      const index = Math.round(Math.random() * 3);
+    if (game?.savedGame && game?.savedGame?.cards?.length > 0) {
+      const { savedGame, played, win, loose } = game;
+      GetCards = [...savedGame.cards];
+      defusing = savedGame.defusingCard;
 
-      GetCards.push(gameCards[index]);
+      setGameStatus((oldGameStatus) => ({
+        ...oldGameStatus,
+        played,
+        win,
+        loose,
+        status: 'running',
+      }));
+    } else {
+      const gameCards = ['cat', 'bomb', 'defusing', 'shuffle'];
+
+      for (let i = 0; i < 5; i++) {
+        const index = Math.round(Math.random() * 3);
+
+        GetCards.push(gameCards[index]);
+      }
+
+      setGameStatus((oldGameStatus) => ({
+        ...oldGameStatus,
+        status: 'running',
+      }));
     }
 
     setCards([...GetCards]);
-    setDefusingCard(0);
-
-    setGameStatus((oldGameStatus) => ({
-      ...oldGameStatus,
-      status: 'running',
-    }));
-
-    console.log(type);
-
-    if (type === 'new') {
-      setGameStatus((oldGameStatus) => ({
-        ...oldGameStatus,
-        played: oldGameStatus.played + 1,
-      }));
-    }
+    setDefusingCard(defusing);
   };
 
   useEffect(() => {
-    startGame();
-  }, []);
+    if (game?.username) startGame(game);
+  }, [game]);
 
   const drawCardHandler = (e) => {
     e.target.style.transform = 'rotateY(180deg)';
@@ -125,7 +75,7 @@ const Game = ({ userName }) => {
       }));
 
       setTimeout(() => {
-        startGame(null, 'restart');
+        startGame();
       }, 1000);
 
       return true;
@@ -137,6 +87,7 @@ const Game = ({ userName }) => {
       } else {
         return setGameStatus((oldGameStatus) => ({
           ...oldGameStatus,
+          played: oldGameStatus.played + 1,
           loose: oldGameStatus.loose + 1,
           status: 'loose',
         }));
@@ -147,6 +98,7 @@ const Game = ({ userName }) => {
     if (leftCards.length === 0) {
       return setGameStatus((oldGameStatus) => ({
         ...oldGameStatus,
+        played: oldGameStatus.played + 1,
         win: oldGameStatus.win + 1,
         status: 'win',
       }));
@@ -178,13 +130,13 @@ const Game = ({ userName }) => {
       <Typography paragraph>{cards.length} cards left</Typography>
 
       <Box mt={10}>
-        <Typography>user : {userName}</Typography>
+        <Typography>user : {game.username}</Typography>
         <Typography>played : {gameStatus.played}</Typography>
         <Typography>win: {gameStatus.win}</Typography>
         <Typography>loose: {gameStatus.loose}</Typography>
       </Box>
       {(gameStatus.status === 'loose' || gameStatus.status === 'win') && (
-        <Button onClick={startGame} variant="contained">
+        <Button onClick={() => startGame()} variant="contained">
           Click Here to play Again
         </Button>
       )}
@@ -192,4 +144,8 @@ const Game = ({ userName }) => {
   );
 };
 
-export default Game;
+const mapStateToProps = (state) => ({
+  game: state.game,
+});
+
+export default connect(mapStateToProps)(Game);
