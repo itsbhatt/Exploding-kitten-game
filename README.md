@@ -20,7 +20,7 @@
 # Setup & Run server
 
 yarn install
-yarn serve
+yarn server
 
 
 # Run client
