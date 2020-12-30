@@ -13,7 +13,14 @@ export default function game(state = initialState, action) {
 
   switch (type) {
     case SET_USER:
-      return { ...state, ...payload };
+      return {
+        ...state,
+        username: payload.username,
+        savedGame: payload.savedGame,
+        played: payload.played,
+        win: payload.win,
+        loose: payload.loose,
+      };
 
     default:
       return state;

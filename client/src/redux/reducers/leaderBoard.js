@@ -1,13 +1,13 @@
-import { SET_USER } from '../actions/types';
+import { SET_LEADERBOARD } from '../actions/types';
 
-const initialState = [];
+const initialState = { users: [], loading: true };
 
 export default function alert(state = initialState, action) {
   const { type, payload } = action;
 
   switch (type) {
-    case SET_USER:
-      return [...state, payload];
+    case SET_LEADERBOARD:
+      return { ...state, users: [...payload.users], loading: false };
 
     default:
       return state;
