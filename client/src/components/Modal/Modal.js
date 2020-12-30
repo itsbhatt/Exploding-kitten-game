@@ -1,17 +1,5 @@
-import React, { useState } from 'react';
-import {
-  makeStyles,
-  TextField,
-  Fade,
-  Backdrop,
-  Modal,
-  Button,
-  Box,
-  Typography,
-} from '@material-ui/core';
-import { connect } from 'react-redux';
-
-import { getSetUser } from '../../redux/actions/user';
+import React from 'react';
+import { makeStyles, Fade, Backdrop, Modal } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -27,15 +15,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TransitionsModal = ({ open, handleClose, getSetUser }) => {
+const TransitionsModal = ({ open, handleClose, children }) => {
   const classes = useStyles();
-
-  const [username, setUsername] = useState('');
-
-  const submitHandler = (e) => {
-    e.preventDefault();
-    getSetUser(username);
-  };
 
   return (
     <Modal
@@ -51,30 +32,10 @@ const TransitionsModal = ({ open, handleClose, getSetUser }) => {
       }}
     >
       <Fade in={open}>
-        <div className={classes.paper}>
-          <form onSubmit={submitHandler}>
-            <Typography align="center">Enter A Username</Typography>
-            <Box my={5} minWidth="280px">
-              <TextField
-                label="Username"
-                id="standard-size-small"
-                size="small"
-                value={username}
-                fullWidth
-                onChange={(e) => setUsername(e.target.value)}
-                required
-              />
-            </Box>
-            <Box display="flex" justifyContent="center">
-              <Button type="submit" variant="outlined">
-                Play
-              </Button>
-            </Box>
-          </form>
-        </div>
+        <div className={classes.paper}>{children}</div>
       </Fade>
     </Modal>
   );
 };
 
-export default connect(null, { getSetUser })(TransitionsModal);
+export default TransitionsModal;

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
+import { Box } from '@material-ui/core';
 
 import Home from './components/Home';
 import Game from './components/Game';
@@ -13,9 +14,7 @@ const App = ({ game }) => {
     setUserName(game?.username);
   }, [game]);
 
-  if (userName) return <Game />;
-
-  return <Home />;
+  return <Box>{userName ? <Game /> : <Home />}</Box>;
 };
 
 const mapStateToProps = (state) => ({

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Box, Button, Typography } from '@material-ui/core';
 import Modal from '../Modal';
 
+import UserModal from './UserModal';
+
 const Home = () => {
   const [open, setOpen] = useState(false);
 
@@ -15,7 +17,7 @@ const Home = () => {
     >
       <Box width="100%" paddingY={{ xs: 3, md: 8 }}>
         <Typography component="h2" variant="h3">
-          The Exploding Kitten
+          The Exploding Kitten Game
         </Typography>
       </Box>
       <Box width="100%" mt="14vh">
@@ -29,10 +31,12 @@ const Home = () => {
         </Typography>
         <Button variant="contained" size="large" onClick={() => setOpen(true)}>
           Let's Start
-        </Button>{' '}
+        </Button>
       </Box>
 
-      <Modal open={open} handleClose={() => setOpen(false)} />
+      <Modal open={open} handleClose={() => setOpen(false)}>
+        <UserModal />
+      </Modal>
     </Box>
   );
 };
