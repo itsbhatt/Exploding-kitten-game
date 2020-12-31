@@ -1,6 +1,7 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const dotenv = require('dotenv').config();
+const path = require('path');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 
@@ -34,6 +35,11 @@ app.use(express.json({ extended: false }));
 
 // routers
 app.use(router);
+
+app.use(express.static(path.join(__dirname, './client/build')));
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, './client/build'));
+});
 
 // for error
 app.use((error, req, res, next) => {
