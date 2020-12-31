@@ -2,7 +2,7 @@ import { SET_USER, SET_LEADERBOARD } from './types';
 
 export const getSetUser = (username) => async (dispatch) => {
   try {
-    const res = await fetch(`/users`, {
+    const res = await fetch(`/api/users`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -32,7 +32,7 @@ export const syncGameToDB = (username, game, cards, defusingCard) => async (
   dispatch
 ) => {
   try {
-    await fetch(`/user/${username}`, {
+    await fetch(`/api/user/${username}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export const syncGameToDB = (username, game, cards, defusingCard) => async (
 
 export const getLeaderBoard = () => async (dispatch) => {
   try {
-    const res = await fetch(`/users`);
+    const res = await fetch(`/api/users`);
     const data = await res.json();
 
     dispatch({

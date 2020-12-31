@@ -11,14 +11,14 @@ const index = ({ id, card }) => {
           <div class="back-main">
             <div class="pipboy">
               <div class="twelve-point-star"></div>
-              <img src="/images/cat_cover.png" />
+              <img src="/images/cat_cover.png" alt="card cover" />
             </div>
           </div>
         </div>
         <div class="card-face card-front">
           <h1>{card}</h1>
           <div class="main-pane">
-            <img class="slugger" src={`/images/${card}.png`} />
+            <img class="slugger" src={`/images/${card}.png`} alt="card front" />
           </div>
         </div>
       </div>
