@@ -38,7 +38,7 @@ const LeaderBoard = ({ leaderBoard, getLeaderBoard }) => {
         <Box mb={2}>
           <Box px={2} py={1} display="flex" justifyContent="space-between">
             <Typography>Username</Typography>
-            <Typography>Win</Typography>
+            <Typography>Points</Typography>
           </Box>
           <Divider />
         </Box>
