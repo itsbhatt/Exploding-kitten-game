@@ -1,6 +1,5 @@
-# Notes-APP
+# Exploding Kitten Game
 
-> Explore Kitten Game
 > A MERN project (MongoDB, Express.js, React, Node.js)
 
 ### Project Setup
