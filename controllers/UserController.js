@@ -2,7 +2,7 @@ const User = require('../models/User');
 
 exports.index = async (req, res, next) => {
   try {
-    const UserData = await User.find()
+    const UserData = await User.find({ win: { $gt: 0 } })
       .select('username win loose gamePlayed')
       .sort('-win');
 
